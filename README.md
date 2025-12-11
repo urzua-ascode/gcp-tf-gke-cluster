@@ -9,6 +9,30 @@ This project provisions a Google Kubernetes Engine (GKE) cluster.
 3.  **Node Pool**: A managed node pool with `e2-medium` instances.
 4.  **Service Account**: Identity for GKE nodes.
 
+### Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph GCP [Google Cloud Platform]
+        subgraph VPC [VPC: gke-vpc-network]
+            subgraph Subnet [Subnet: gke-subnet (10.10.0.0/24)]
+                
+                subgraph ControlPlane [Control Plane]
+                    master[GKE Master]
+                end
+
+                subgraph Workers [Worker Nodes]
+                    pool[Node Pool: my-node-pool <br/> Machine: e2-medium <br/> Preemptible: true]
+                end
+                
+                sa[Service Account: gke-node-sa]
+                pool -.-> sa
+                master --- pool
+            end
+        end
+    end
+```
+
 ## Usage
 
 1.  **Authenticate**:
